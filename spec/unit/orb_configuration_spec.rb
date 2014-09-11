@@ -51,6 +51,21 @@ module OrbConfiguration
           expect { config.parse_key('nope.again') }.to raise_error(RuntimeError)
         end
       end
+
+      context 'read config file' do
+        it 'read_configuration! throws FileNotFoundException if there is no file.' do
+          expect { config.read_configuration!('') }.to raise_error(FileNotFoundException)
+        end
+      end
+
+      it '#empty? should return false if config file was read.' do
+        expect(config.empty?).to be_false
+      end
+
+      it '#empty? should return true if no config file was read.' do
+        config.reset!
+        expect(config.empty?).to be_true
+      end
     end
   end
 end

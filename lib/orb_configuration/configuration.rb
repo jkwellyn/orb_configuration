@@ -5,6 +5,9 @@ require 'yaml'
 require 'orb_logger'
 
 module OrbConfiguration
+  class FileNotFoundException < Exception
+  end
+
   # Provides access to data in 'config/config.yml'. Supports both [:property] and '.property' style access
   # to yml configuration.
   class Configuration
@@ -17,26 +20,23 @@ module OrbConfiguration
     LOG ||= OrbLogger::OrbLogger.new
     def_delegators :@data_hash, :[]
 
-    attr_reader :data_hash
-    attr_reader :data_model
-
     def initialize
-      read_configuration!(DEFAULT_CONFIGURATION_LOCATION)
+      begin
+        read_configuration!(DEFAULT_CONFIGURATION_LOCATION)
+      rescue FileNotFoundException
+        warning_message = "#{DEFAULT_CONFIGURATION_LOCATION} not found. Not loading any configuration data. " \
+        "To read data, provide #{DEFAULT_CONFIGURATION_LOCATION} or call #read_config!(path) with some other file."
+        LOG.warn(warning_message)
+      end
     end
 
     # Allows the user to specify a config file other than 'config/config.yml'.
     # This is provided as a convenience, but should be avoided in favor of the default location when possible.
     # @param [String] config_path Overrides default configuration location.
     def read_configuration!(config_path)
-      if File.exist?(config_path)
-        @data_hash = YAML.load_file(config_path)
-        @data_model = RecursiveOpenStruct.new(@data_hash, recurse_over_arrays: true)
-      else
-        warning_message = "#{config_path} not found. Not loading any configuration data. " \
-        "To read data, provide #{config_path} or call #read_config!(path) with some other file."
-        LOG.warn(warning_message)
-      end
-      nil
+      fail(FileNotFoundException, "#{config_path} not found") unless File.exist?(config_path)
+      @data_hash = YAML.load_file(config_path)
+      @data_model = RecursiveOpenStruct.new(@data_hash, recurse_over_arrays: true)
     end
 
     def parse_key(config_key)
@@ -46,6 +46,15 @@ module OrbConfiguration
 
     def method_missing(method, *args, &block)
       @data_model.send(method, *args, &block)
+    end
+
+    def empty?
+      @data_model.nil?
+    end
+
+    def reset!
+      @data_model = nil
+      @data_hash = nil
     end
 
     private

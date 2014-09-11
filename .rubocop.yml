@@ -1,3 +1,5 @@
+inherit_from: .rubocop_todo.yml
+
 #do not check for utf stamp
 Encoding:
   Enabled: false
