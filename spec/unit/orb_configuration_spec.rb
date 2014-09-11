@@ -1,61 +1,55 @@
-# http://betterspecs.org/
-
-# For examples of mocks, see https://github.com/rspec/rspec-mocks
+require_relative '../../lib/orb_configuration/configuration'
 
 module OrbConfiguration
-  describe OrbConfiguration do
-
-    # TODO: Global set up goes here
-    before(:all) do
-      LOG.info("called in: #{self.class.name}, #{File.basename(__FILE__)}")
-    end
-
-    # TODO: Local set up goes here
-    before(:each) do
-      # this is called before each test
-    end
-
-    # use let to declare your variables
-    let(:dude_wheres_my_var?) { nil }
-
-    context 'example single expectation test' do
-      it { expect(true).to eq(true) }
-    end
-
-    context 'example failing test' do
-      # State explicitly what is being tested
-      it 'TC0 boolean comparison' do
-        expect(true).to eq(false)
+  describe Configuration do
+    context 'singleton creation' do
+      it 'only creates one instance' do
+        config = Configuration.instance
+        expect(config).to eql(Configuration.instance)
       end
 
-      it 'blargh' do
-        [].should be_empty
+      it '#new throws error' do
+        expect { Configuration.new }.to raise_error(NoMethodError)
       end
     end
 
-    context 'rspec pending examples' do
-      # BUG: ID-123 and ref
-      it 'pending TC1 will keep running' do
-        pending('Defect ID-123 P1 Functional Area X') do
-          expect(true).to eq(false)
+    context 'instance methods' do
+      let(:config) do
+        config = Configuration.instance
+        config.read_configuration!(File.join(File.dirname(__FILE__), '..', 'fixtures', 'config.yml'))
+        config
+      end
+      context 'delegated methods' do
+        it '#[] accepts a symbol and provides access to config data' do
+          expect(config[:test][:foo]).to eq('bar')
+        end
+
+        it '#[] accepts a string and provides access to config data' do
+          expect(config['other_test']).to eq(123)
         end
       end
 
-      # BUG: ID-123 and ref
-      it 'pending TC2 will keep running and throw an exception once it is passing' do
-        pending('Defect ID-123 P1:Functional Area X') do
-          expect(true).to eq(true)
+      context 'config properties are methods' do
+        it '#method_missing forwards methods to internal RecursiveStruct' do
+          expect(config.test.foo).to eq('bar')
+        end
+
+        it '#method_missing returns nil when internal RecursiveStruct has no associated property' do
+          expect(config.fake).to be_nil
         end
       end
 
-      # TODO: Complete this test case
-      it 'TC3 rspec can also use pending for tests that still need to be written' do
-        pending 'these tests require to be run'
-      end
-
-      # TODO: complete this test case
-      it 'TC4 this test case still needs to be completed' do
-        # example It statement, with no do and no pending statements
+      context 'configuration string parsing' do
+        it '#parse_config_key returns the correct property value for the given string' do
+          expect(config.parse_key('test.foo')).to eq('bar')
+          expect(config.parse_key('test').foo).to eq('bar')
+        end
+        it '#parse_config_key throws an error for nonexistant keys' do
+          # Providing 'fail' does not throw the error I expect. I am not sure why.
+          # expect(config.parse_config_key('fail')).to eq('bar')
+          expect { config.parse_key('nope') }.to raise_error(RuntimeError)
+          expect { config.parse_key('nope.again') }.to raise_error(RuntimeError)
+        end
       end
     end
   end

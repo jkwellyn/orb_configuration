@@ -32,7 +32,7 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency('rubocop', ' 0.24.0')
   spec.add_development_dependency('fuubar', ' 1.3.2')
   spec.add_development_dependency('opower-deployment')
-  spec.add_development_dependency('orb_logger', ' 0.0.1')
   spec.add_development_dependency('simplecov', ' 0.7.1')
-
+  spec.add_runtime_dependency('recursive-open-struct')
+  spec.add_runtime_dependency('orb_logger', ' 0.0.1')
 end

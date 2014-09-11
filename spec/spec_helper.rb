@@ -1,4 +1,3 @@
-# TODO: make spec_helper_gem and spec_helper_test. Take coverage out of test.
 require 'simplecov'
 require 'test_support/filesystem_helper'
 
