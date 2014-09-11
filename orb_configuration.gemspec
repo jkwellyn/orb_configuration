@@ -4,12 +4,12 @@ require File.expand_path('../lib/orb_configuration/version', __FILE__)
 Gem::Specification.new do |spec|
   spec.name          = 'orb_configuration'
   spec.version       = OrbConfiguration::VERSION
-  spec.summary       = 'TODO: Write a short summary. Required.'
-  spec.description   = 'TODO: Write a longer description. Optional.'
-  spec.homepage      = 'https://github.va.opower.it/your-GH-name-here/orb_configuration'
+  spec.summary       = 'A simple configuration library.'
+  spec.description   = 'Provides programatic access to config/config.yml'
+  spec.homepage      = 'https://github.va.opower.it/auto/orb_configuration'
 
   spec.authors       = ['jcrimmins']
-  spec.email         = ['your-email-here@opower.com']
+  spec.email         = ['john.crimmins@opower.com']
 
   # This gem will work with 1.9.3 or greater...
   spec.required_ruby_version = '>= 1.9.3'
