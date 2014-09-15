@@ -20,6 +20,9 @@ $ gem install 'orb_configuration'
 
 By convention, configuration lives in a single file: `config/config.yml`.
 
+Currently, using this library is only supported for top-level test projects. Using this in a gem that is loaded by another
+project is something we're working on. 
+
 You can put any data you want in this file and access that data in one of three ways:
  
 ``` 
