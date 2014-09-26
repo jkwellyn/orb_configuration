@@ -1,3 +1,4 @@
+require 'active_support/all'
 require 'forwardable'
 require 'recursive-open-struct'
 require 'singleton'
@@ -14,29 +15,41 @@ module OrbConfiguration
     include ::Singleton
     extend ::Forwardable
 
-    DEFAULT_CONFIGURATION_FILE_NAME = 'config.yml'
     DEFAULT_CONFIGURATION_DIRECTORY = 'config'
-    DEFAULT_CONFIGURATION_LOCATION = File.join(Dir.pwd, DEFAULT_CONFIGURATION_DIRECTORY, DEFAULT_CONFIGURATION_FILE_NAME)
+    DEFAULT_CONFIGURATION_FILE_NAME = "#{DEFAULT_CONFIGURATION_DIRECTORY}.yml"
+    CODE_DIRECTORIES = %w(lib spec)
     LOG ||= OrbLogger::OrbLogger.new
+
     def_delegators :@data_hash, :[]
 
-    def initialize
-      begin
-        read_configuration!(DEFAULT_CONFIGURATION_LOCATION)
-      rescue FileNotFoundException
-        warning_message = "#{DEFAULT_CONFIGURATION_LOCATION} not found. Not loading any configuration data. " \
-        "To read data, provide #{DEFAULT_CONFIGURATION_LOCATION} or call #read_config!(path) with some other file."
-        LOG.warn(warning_message)
+    class << self
+      # @param [String] calling_file path of the file that invoked this code.
+      # @return [String] path to the configuration file based on the location of the calling file
+      def resolve_config_path(calling_file)
+        config_location = File.join(Configuration::DEFAULT_CONFIGURATION_DIRECTORY,
+                                    Configuration::DEFAULT_CONFIGURATION_FILE_NAME)
+
+        execution_directories = CODE_DIRECTORIES.select { |dir| calling_file.include?(dir) }
+        if execution_directories.length > 1
+          warn_message = 'This project has a non-conventional structure (nested lib or spec directories). ' \
+         'We may not be able to find your config file.'
+          LOG.warn(warn_message)
+        end
+
+        File.join(calling_file.split(execution_directories.first).first, config_location)
       end
     end
 
     # Allows the user to specify a config file other than 'config/config.yml'.
-    # This is provided as a convenience, but should be avoided in favor of the default location when possible.
-    # @param [String] config_path Overrides default configuration location.
-    def read_configuration!(config_path)
+    # @param [String] config_path provided as a convenience, but should be avoided in favor of the default location.
+    # @return [Nil] nil
+    def add!(config_path = nil)
+      calling_code_file_path = caller.first.split(':').first
+      config_path ||= Configuration.resolve_config_path(calling_code_file_path)
       fail(FileNotFoundException, "#{config_path} not found") unless File.exist?(config_path)
-      @data_hash = YAML.load_file(config_path)
+      @data_hash = @data_hash.nil? ? YAML.load_file(config_path) : @data_hash.deep_merge(YAML.load_file(config_path))
       @data_model = RecursiveOpenStruct.new(@data_hash, recurse_over_arrays: true)
+      nil
     end
 
     def parse_key(config_key)

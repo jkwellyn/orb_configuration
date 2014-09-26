@@ -37,8 +37,9 @@ main() {
   rvm use $RUBY_VERSION
 
   bundle install
-  bundle exec rake spec:full --trace
   bundle exec rake rubocop
+  bundle exec rake spec:full --trace
+  gem build orb_configuration.gemspec
 
   endTime=$(date +%s)
   timeDifference=$(( $endTime - $startTime ))

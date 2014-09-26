@@ -20,9 +20,6 @@ $ gem install 'orb_configuration'
 
 By convention, configuration lives in a single file: `config/config.yml`.
 
-Currently, using this library is only supported for top-level test projects. Using this in a gem that is loaded by another
-project is something we're working on. 
-
 You can put any data you want in this file and access that data in one of three ways:
  
 ``` 
@@ -35,23 +32,28 @@ You can put any data you want in this file and access that data in one of three 
  
  require 'orb_configuration'
  
- config = OrbConfiguration::Configuration.instance
- config[:foo][:bar] # returns 'baz'
- config.foo.bar # also returns 'baz'
- config.parse_key('foo.bar') #also returns 'baz'
-```
-
-`OrbConfiguration::Configuration` is a singleton so you will not be able to call `.new`. Use the `.instance` method instead.
-
-If you need to read configuration from some place other than the conventional location, do this:
-
-```
- require 'orb_configuration'
+ class MyClass
+   include OrbConfiguration::Configurable
  
- config = OrbConfiguration::Configuration.instance
- config.read_configuration!(non_conventional_config_path) # Must be a .yml file
- # From now on, all properties will come from the non_conventional_config_path
+   config = OrbConfiguration::Configuration.instance
+   config[:foo][:bar] # returns 'baz'
+   config.foo.bar # also returns 'baz'
+   config.parse_key('foo.bar') #also returns 'baz'
 ```
+### Loading Configuration
+You should never have to read from a config file. Including the `Configurable` module is what initializes the `Configuration` 
+object with the data from `config/config.yml`. 
+Simply include this module and your configuration will be available with `OrbConfiguration::Configuration.instance`.
+
+### Accessing Configuration
+After `include OrbConfiguration::Configurable` you can access your config with: `OrbConfiguration::Configuration.instance`.
+`OrbConfiguration::Configuration` is a singleton so you will not be able to call `.new`. Use the `.instance` method instead.
+This will have all of your project's configuration and any configuration defined in dependencies.
+
+### Layering Configuration
+This data is stored in a structure similar to Hash. This means you can override the configuration in dependencies by overwriting 
+their key-value pairs. Also, it's probably a good idea to nest your configuration under some top-level, project-specific key.
+This prevents accidental configuration collisions.
 
 ## Contributing
 

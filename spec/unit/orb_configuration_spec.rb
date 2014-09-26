@@ -16,7 +16,7 @@ module OrbConfiguration
     context 'instance methods' do
       let(:config) do
         config = Configuration.instance
-        config.read_configuration!(File.join(File.dirname(__FILE__), '..', 'fixtures', 'config.yml'))
+        config.add!(File.join(File.dirname(__FILE__), '..', 'fixtures', 'config.yml'))
         config
       end
       context 'delegated methods' do
@@ -53,18 +53,36 @@ module OrbConfiguration
       end
 
       context 'read config file' do
-        it 'read_configuration! throws FileNotFoundException if there is no file.' do
-          expect { config.read_configuration!('') }.to raise_error(FileNotFoundException)
+        it 'add! throws FileNotFoundException if there is no file.' do
+          expect { config.add!('') }.to raise_error(FileNotFoundException)
         end
       end
 
       it '#empty? should return false if config file was read.' do
-        expect(config.empty?).to be_false
+        expect(config.empty?).to be false
       end
 
       it '#empty? should return true if no config file was read.' do
         config.reset!
-        expect(config.empty?).to be_true
+        expect(config.empty?).to be true
+      end
+
+    end
+
+    context 'class methods' do
+      it '::resolve_config_path creates correct path when under the lib directory' do
+        config_path = Configuration.resolve_config_path('/foo/bar/lib/file.rb')
+        expect(config_path).to eq('/foo/bar/config/config.yml')
+      end
+
+      it '::resolve_config_path creates correct path when under two lib directories' do
+        config_path = Configuration.resolve_config_path('/foo/bar/lib/lib/lib/file.rb')
+        expect(config_path).to eq('/foo/bar/config/config.yml')
+      end
+
+      it '::resolve_config_path creates correct path when under two non-consecutive lib directories' do
+        config_path = Configuration.resolve_config_path('/foo/bar/lib/fake/lib/file.rb')
+        expect(config_path).to eq('/foo/bar/config/config.yml')
       end
     end
   end
