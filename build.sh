@@ -36,9 +36,10 @@ main() {
   # use the official Opower approved ruby version to run our tests against
   rvm use $RUBY_VERSION
 
-  bundle install
+  bundle install --path vendor/bundle
   bundle exec rake rubocop
   bundle exec rake spec:full --trace
+  bundle exec rake notes:generate_annotations_report
   gem build orb_configuration.gemspec
 
   endTime=$(date +%s)
