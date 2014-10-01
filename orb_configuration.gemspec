@@ -34,6 +34,5 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency('opower-deployment')
   spec.add_development_dependency('simplecov', ' 0.7.1')
   spec.add_runtime_dependency('recursive-open-struct')
-  spec.add_runtime_dependency('orb_logger')
   spec.add_runtime_dependency('activesupport', '>= 3.0.0')
 end

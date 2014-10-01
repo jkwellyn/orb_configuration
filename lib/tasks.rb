@@ -8,12 +8,11 @@ require 'rspec-extra-formatters'
 require 'fuubar'
 require 'rubocop/rake_task'
 require 'annotation_manager/rake_task'
-require 'orb_logger'
 require 'yard'
+require 'logger'
 
-RAKE_LOG ||= OrbLogger::OrbLogger.new
-RAKE_LOG.progname = 'Rake Tasks'
 TMP_DIR = 'tmp'
+LOG = Logger.new(open('rake.log', File::WRONLY | File::APPEND | File::CREAT))
 
 YARD::Rake::YardocTask.new do |task|
   task.options = ['--output-dir=tmp/yard']
@@ -23,7 +22,7 @@ desc 'Run RuboCop on lib and spec directories, Gemfile, gemspec, Rakefile; Overr
 RuboCop::RakeTask.new(:rubocop, :pattern) do |task, args|
   task.patterns = ['lib/**/*.rb', 'spec/**/*.rb', 'Gemfile', '*.gemspec', 'Rakefile']
   task.patterns = args[:pattern].split(' ') if args[:pattern] # override default pattern
-  RAKE_LOG.info("Running RuboCop against #{task.patterns}")
+  LOG.info("Running RuboCop against #{task.patterns}")
   # don't abort rake on failure
   task.fail_on_error = false
 end
@@ -48,9 +47,9 @@ end
 namespace :clean do
   desc 'Remove all tmp files'
   task :tmp do
-    RAKE_LOG.info("Deleting the #{TMP_DIR} directory...")
+    LOG.info("Deleting the #{TMP_DIR} directory...")
     FileUtils.rm_rf(TMP_DIR)
-    RAKE_LOG.info('Deleted.')
+    LOG.info('Deleted.')
   end
 end
 
@@ -63,3 +62,5 @@ namespace :spec do
   desc 'Run all tests'
   task full: %w(spec:unit)
 end
+
+LOG.close
