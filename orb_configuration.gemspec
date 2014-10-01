@@ -8,8 +8,8 @@ Gem::Specification.new do |spec|
   spec.description   = 'Provides programatic access to config/config.yml'
   spec.homepage      = 'https://github.va.opower.it/auto/orb_configuration'
 
-  spec.authors       = ['jcrimmins']
-  spec.email         = ['john.crimmins@opower.com']
+  spec.authors       = ['Automation Services']
+  spec.email         = ['automation.services@opower.com']
 
   # This gem will work with 1.9.3 or greater...
   spec.required_ruby_version = '>= 1.9.3'
