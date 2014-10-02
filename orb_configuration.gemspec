@@ -22,17 +22,19 @@ Gem::Specification.new do |spec|
   spec.test_files    = spec.files.grep(/^(test|spec|features)\//)
   spec.require_paths = ['lib']
 
-  spec.add_development_dependency('rake', '~> 10.1.1')
-  spec.add_development_dependency('annotation_manager', '~> 0.0.2')
+  spec.add_development_dependency('rake', '~> 10.1')
+  spec.add_development_dependency('annotation_manager', '~> 1.0')
   spec.add_development_dependency('yard', '~> 0.8.7')
   spec.add_development_dependency('redcarpet', '~> 2.3.0')
   spec.add_development_dependency('rspec', '~> 3.1')
   spec.add_development_dependency('rspec-legacy_formatters', '~> 1.0')
   spec.add_development_dependency('rspec-extra-formatters', '~> 1.0')
-  spec.add_development_dependency('rubocop', ' 0.24.0')
+  spec.add_development_dependency('rubocop', '~> 0.24')
   spec.add_development_dependency('fuubar', '~> 2.0')
-  spec.add_development_dependency('opower-deployment')
-  spec.add_development_dependency('simplecov', ' 0.7.1')
-  spec.add_runtime_dependency('recursive-open-struct')
+  # This is necessary for the build script. We are locking to 0.1.2 because this gem has incorrect tags
+  # that cause confusion with more permissive version specifications.
+  spec.add_development_dependency('opower-deployment', '0.1.2')
+  spec.add_development_dependency('simplecov', '~> 0.7')
+  spec.add_runtime_dependency('recursive-open-struct', '~> 0.5')
   spec.add_runtime_dependency('activesupport', '>= 3.0.0')
 end
