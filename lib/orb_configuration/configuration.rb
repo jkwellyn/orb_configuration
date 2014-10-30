@@ -43,8 +43,6 @@ module OrbConfiguration
         execution_dir_name = execution_dirs.first
         candidate_dirs = path.split(execution_dir_name << File::SEPARATOR)
         candidate_dirs.reduce do |parent_dir, child_dir|
-          puts parent_dir
-          puts child_dir
           if File.exist?(File.join(parent_dir, 'Gemfile'))
             File.join(parent_dir, execution_dir_name)
           else
