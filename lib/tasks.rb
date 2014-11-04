@@ -52,13 +52,18 @@ namespace :clean do
 end
 
 namespace :spec do
-  RSpec::Core::RakeTask.new(unit: %w(clean:tmp)) do |task|
+  RSpec::Core::RakeTask.new(:unit) do |task|
     FileUtils.mkdir_p(TMP_DIR)
     build_rspec_opts('unit', task)
   end
 
+  RSpec::Core::RakeTask.new(:e2e) do |task|
+    FileUtils.mkdir_p(TMP_DIR)
+    build_rspec_opts('e2e', task)
+  end
+
   desc 'Run all tests'
-  task full: %w(spec:unit)
+  task full: %w(clean:tmp spec:unit spec:e2e)
 end
 
 LOG.close

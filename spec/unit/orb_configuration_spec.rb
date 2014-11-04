@@ -77,17 +77,50 @@ module OrbConfiguration
     end
 
     context 'class methods' do
+      let(:var_lib_jenkins_foo) { '/var/lib/jenkins/foo' }
+      let(:var_jenkins_foo) { '/var/jenkins/foo' }
 
-      it '#find_execution_dir finds config location with nested libs' do
-        allow(File).to receive(:exist?).and_return(false, false, true)
-        expect(Configuration.find_execution_path('/var/lib/jenkins/foo/lib/file.rb')).to eq('/var/lib/jenkins/foo/lib')
+      it '#find_execution_dir finds a config location when code is in a bin directory' do
+        # We use `File.exist?` in configuration.rb to check if we have a Gemfile.
+        allow(File).to receive(:exist?).and_return(true)
+        expect(Configuration.find_execution_path('/var/lib/jenkins/foo/bin/file.rb')).to eq(var_lib_jenkins_foo)
       end
 
-      pending 'This passes when run alone. How do we reset Rspec mocks? #and_call_original does not seem to help' do
-        it '#find_execution_dir finds config location with one lib' do
-          allow(File).to receive(:exist?).and_return(true, true)
-          expect(Configuration.find_execution_path('/var/jenkins/foo/lib/file.rb')).to eq('/var/jenkins/foo/lib')
-        end
+      it '#find_execution_dir does not find a config when none exists under a lib directory' do
+        allow(File).to receive(:exist?).and_return(false, false)
+        expect(Configuration.find_execution_path('/var/lib/jenkins/foo/lib/file.rb')).to be_empty
+      end
+
+      it '#find_execution_dir finds config location with nested libs' do
+        allow(File).to receive(:exist?).and_return(true)
+        expect(Configuration.find_execution_path('/var/lib/jenkins/foo/lib/file.rb')).to eq(var_lib_jenkins_foo)
+      end
+
+      it '#find_execution_dir finds config location with nested specs' do
+        allow(File).to receive(:exist?).and_return(false, true)
+        expect(Configuration.find_execution_path('/var/lib/jenkins/foo/spec/smoke/spec'))
+        .to eq(var_lib_jenkins_foo)
+      end
+
+      it '#find_execution_dir finds config location when calling code is deep under lib' do
+        allow(File).to receive(:exist?).and_return(true)
+        expect(Configuration.find_execution_path('/var/lib/jenkins/foo/lib/one/two/three/file.rb'))
+        .to eq(var_lib_jenkins_foo)
+      end
+
+      it '#find_execution_dir finds config location with spec nested under lib' do
+        allow(File).to receive(:exist?).and_return(true)
+        expect(Configuration.find_execution_path('/var/lib/jenkins/foo/spec/file.rb')).to eq(var_lib_jenkins_foo)
+      end
+
+      it '#find_execution_dir finds config location with one lib' do
+        allow(File).to receive(:exist?).and_return(true)
+        expect(Configuration.find_execution_path('/var/jenkins/foo/lib/file.rb')).to eq(var_jenkins_foo)
+      end
+
+      it '#find_execution_dir finds config location with one spec' do
+        allow(File).to receive(:exist?).and_return(true, true)
+        expect(Configuration.find_execution_path('/var/jenkins/foo/spec/file.rb')).to eq(var_jenkins_foo)
       end
     end
   end

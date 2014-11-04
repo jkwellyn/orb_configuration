@@ -1,0 +1,107 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+  <title> MoonRaker - upgrading the formula.</title>
+  <meta http-equiv="Content-Type" content="text/html" charset="utf-8"/>
+  <style type="text/css"></style>
+  <script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
+  <script type="text/javascript" src="http://www.datatables.net/release-datatables/media/js/jquery.dataTables.min.js"></script>
+  <!-- themeroller stylesheets for datatables -->
+  <link rel="stylesheet" type="text/css" href="https://datatables.net/media/css/jui_themes/redmond/jquery-ui-1.7.2.custom.css" />
+  <!--<link rel="stylesheet" type="text/css" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.9/themes/eggplant/jquery-ui.css" /> -->
+  <link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
+
+  <!-- embedded css in order to only have one template file-->
+   <STYLE type="text/css">
+      .dataTables_info { padding-top: 0; }
+    .dataTables_paginate { padding-top: 0; }
+    .css_right { float: right; }
+
+      .evenhl {
+        background-color: #eeeeee;
+      }
+
+      .timestamp {
+        text-align: right;
+      color: #536891;
+      font-size:0.75rem;
+        font-weight:italic;
+      }
+      .heading {
+        color:#536891;
+        font-size:2.8rem;
+        font-weight:bold;
+      }
+      .heading2 {
+        color:#536891;
+        font-size:1rem;
+        font-weight:bold;
+      }
+
+      .footer {
+        margin-top:15px;
+        border-top:0.13rem solid #D7D7D7;
+        text-align: right;
+      color: #536891;
+      font-size:1rem;
+        font-weight:bold;
+      }
+
+      body {
+        font-family: 'Open Sans', sans-serif;
+        margin:20px 50px;
+      }
+      td, th {
+        padding:0.4rem 0.2rem;
+      }
+
+      h2 {
+        color:#536891;
+        font-weight: bold;
+      }
+      .hlon {
+        background-color:yellow;
+        color:red;
+      }
+   </STYLE>
+</head>
+
+<body>
+  <div class="heading2">::: rake-notes + oRb Annotations :::</div>
+
+  <!-- I mustache you to autogenerate this for me...-->
+  <div>
+  {{#files}}
+  <h2> {{filename}} </h2>
+  <table id="testthis0" class="reference" style="width:100%">
+    <thead>
+      <th>Line Number</th>
+      <th>Type</th>
+      <th>Comments</th>
+    </thead>
+    <tbody>
+    {{#annotations}}
+    <tr class="evenhl">
+      <td> {{line}} </td>
+      <td> {{tag}} </td>
+      <td> {{text}} </td>
+    </tr>
+    {{/annotations}}
+  </tbody>
+  </table>
+  {{/files}}
+  </div>
+  <div class="footer">Powered by oRb.</div>
+</body>
+<script>
+
+jQuery(document).ready(function(){
+
+    jQuery(".reference").dataTable({"bJQueryUI": true, "sPaginationType": "full_numbers"});
+
+    jQuery('tr').on("mouseover", function() { jQuery(this).addClass("hlon");});
+    jQuery('tr').on("mouseout", function() { jQuery(this).removeClass("hlon");});
+});
+</script>
+
+</html>

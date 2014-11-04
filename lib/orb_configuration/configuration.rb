@@ -20,35 +20,39 @@ module OrbConfiguration
 
     DEFAULT_CONFIGURATION_DIRECTORY = 'config'
     DEFAULT_CONFIGURATION_FILE_NAME = "#{DEFAULT_CONFIGURATION_DIRECTORY}.yml"
-    CODE_DIRECTORIES = %w(lib spec)
+    CODE_DIRECTORIES = %w(lib spec bin)
 
     def_delegators :@data_hash, :[]
     LOG = Logger.new(STDOUT)
 
     class << self
       # @param [String] calling_file path of the file that invoked this code.
-      # @return [String] path to the configuration file based on the location of the calling file
+      # @return [String] path to configuration or empty string if not found.
       def resolve_config_path(calling_file)
         config_location = File.join(Configuration::DEFAULT_CONFIGURATION_DIRECTORY,
                                     Configuration::DEFAULT_CONFIGURATION_FILE_NAME)
 
-        File.join(find_execution_path(calling_file), '..', config_location)
+        config_path = find_execution_path(calling_file)
+        config_path.empty? ? config_path : File.join(config_path, config_location)
       end
 
       # Finds a Ruby project's lib directory by looking for a Gemfile sibling.
       # @param [String] path The path in which to look for the project's lib directory.
       def find_execution_path(path)
         path = File.extname(path).empty? ? path : File.dirname(path)
-        execution_dirs = CODE_DIRECTORIES.select { |dir| path.include?(dir) }
-        execution_dir_name = execution_dirs.first
-        candidate_dirs = path.split(execution_dir_name << File::SEPARATOR)
-        candidate_dirs.reduce do |parent_dir, child_dir|
-          if File.exist?(File.join(parent_dir, 'Gemfile'))
-            File.join(parent_dir, execution_dir_name)
-          else
-            File.join(parent_dir, execution_dir_name, child_dir)
+        directories = path.split(File::Separator)
+        project_directory = ''
+        until directories.nil? || directories.empty?
+          if CODE_DIRECTORIES.include?(directories.last) && project_directory.empty?
+            directories.pop
+            gemfile_location = File.join(directories.join(File::Separator), 'Gemfile')
+            if File.exist?(gemfile_location)
+              project_directory =  File.dirname(gemfile_location)
+            end
           end
+          directories.pop
         end
+        project_directory
       end
     end
 

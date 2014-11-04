@@ -4,7 +4,7 @@ require_relative '../../lib/orb_configuration/configuration'
 module OrbConfiguration
   describe Configurable do
     context 'hooks' do
-      it 'fails on include when config/config.yml not found' do
+      it 'does not fail on include when config/config.yml not found' do
         expect do
           class ConfigTest
             include Configurable
