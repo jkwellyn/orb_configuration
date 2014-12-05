@@ -6,15 +6,16 @@ module OrbConfiguration
     class << self
       def included(_parent)
         log = Logger.new(STDOUT)
+        log.level = ENV['DEBUG'] ? Logger::DEBUG : Logger::INFO
         # calling_file is the file name of the Ruby code that is our parent in the call stack.
         calling_file = caller.first.split(':').first
-        puts "calling_file: #{calling_file}"
+        log.debug("calling_file: #{calling_file}")
         config_path = Configuration.resolve_config_path(calling_file)
         if File.exist?(config_path)
-          log.info("Reading configuration from #{config_path}")
+          log.debug("Reading configuration from #{config_path}")
           Configuration.instance.add!(config_path)
         else
-          log.warn("Expected config directory #{config_path} not found. Not loading configuration")
+          log.debug("Expected config directory #{config_path} not found. Not loading configuration")
         end
       end
     end
