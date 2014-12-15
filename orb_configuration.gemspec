@@ -29,7 +29,7 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency('rspec', '~> 3.1')
   spec.add_development_dependency('rspec-legacy_formatters', '~> 1.0')
   spec.add_development_dependency('rspec-extra-formatters', '~> 1.0')
-  spec.add_development_dependency('rubocop', '~> 0.24')
+  spec.add_development_dependency('rubocop', '= 0.26.1')
   spec.add_development_dependency('fuubar', '~> 2.0')
   # This is necessary for the build script. We are locking to 0.1.2 because this gem has incorrect tags
   # that cause confusion with more permissive version specifications.
