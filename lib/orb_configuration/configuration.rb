@@ -56,6 +56,13 @@ module OrbConfiguration
       end
     end
 
+    # Assumes default configuration of config location relative to calling file; does not search parent directories
+    # @return nil
+    def load!
+      add!(File.join(OrbConfiguration::Configuration::DEFAULT_CONFIGURATION_DIRECTORY,
+                     OrbConfiguration::Configuration::DEFAULT_CONFIGURATION_FILE_NAME))
+    end
+
     # Allows the user to specify a config file other than 'config/config.yml'.
     # @param [String] config_path provided as a convenience, but should be avoided in favor of the default location.
     # @return nil

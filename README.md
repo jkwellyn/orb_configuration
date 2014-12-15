@@ -41,9 +41,13 @@ You can put any data you want in this file and access that data in one of three 
    config.parse_key('foo.bar') #also returns 'baz'
 ```
 ### Loading Configuration
-You should never have to read from a config file. Including the `Configurable` module is what initializes the `Configuration` 
-object with the data from `config/config.yml`. 
-Simply include this module and your configuration will be available with `OrbConfiguration::Configuration.instance`.
+If you are using a configurable module/class, you should never have to read from a config file. Including the `Configurable` module is what initializes the `Configuration`
+object with the data from `config/config.yml`, searching up the directory structure for the configuration.  Simply include this module and your configuration will be available with `OrbConfiguration::Configuration.instance`.
+
+If you are using the OrbConfiguration outside of a module or class, there are a few methods available to you to point OrbConfiguration to your configuration directory.
+`add!` allows you to change the directory/file name for your configuration files. OrbConfiguration will still search up the directory structure for the configuration, but looking for your path/file instead.
+`load!` looks for the default directory/file name (config/config.yml) but at the same level as the calling directory.
+`merge!` allows you to pass in a hash of additional configuration to add to your OrbConfiguration.
 
 ### Accessing Configuration
 After `include OrbConfiguration::Configurable` you can access your config with: `OrbConfiguration::Configuration.instance`.
