@@ -56,11 +56,10 @@ module OrbConfiguration
       end
     end
 
-    # Assumes default configuration of config location relative to calling file; does not search parent directories
+    # Loads config/config.yml relative to Ruby's execution directory. Useful for accessing config in tests and Rake tasks.
     # @return nil
     def load!
-      add!(File.join(OrbConfiguration::Configuration::DEFAULT_CONFIGURATION_DIRECTORY,
-                     OrbConfiguration::Configuration::DEFAULT_CONFIGURATION_FILE_NAME))
+      add!(File.join(DEFAULT_CONFIGURATION_DIRECTORY, DEFAULT_CONFIGURATION_FILE_NAME))
     end
 
     # Allows the user to specify a config file other than 'config/config.yml'.
@@ -70,6 +69,7 @@ module OrbConfiguration
       calling_code_file_path = caller.first.split(':').first
       config_path ||= Configuration.resolve_config_path(calling_code_file_path)
       fail(FileNotFoundException, "#{config_path} not found") unless File.exist?(config_path)
+      LOG.debug("Reading configuration from #{config_path}")
       merge!(YAML.load_file(config_path))
     end
 

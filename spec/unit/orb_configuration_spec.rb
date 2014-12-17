@@ -14,10 +14,18 @@ module OrbConfiguration
     end
 
     context 'instance methods' do
+      let(:config_path) { File.join(File.dirname(__FILE__), '..', 'fixtures') }
       let(:config) do
         config = Configuration.instance
-        config.add!(File.join(File.dirname(__FILE__), '..', 'fixtures', 'config.yml'))
+        config.add!(File.join(config_path, 'config.yml'))
         config
+      end
+
+      it '#load! loads the top-level config.yml' do
+        stub_const('OrbConfiguration::Configuration::DEFAULT_CONFIGURATION_DIRECTORY', config_path)
+        config = Configuration.instance
+        config.load!
+        expect(config.test.foo).to eq('bar')
       end
 
       it '#merge! sets config as expected' do
