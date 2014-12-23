@@ -5,8 +5,7 @@ module OrbConfiguration
   module Configurable
     class << self
       def included(_parent)
-        log = Logger.new(STDOUT)
-        log.level = ENV['DEBUG'] ? Logger::DEBUG : Logger::INFO
+        log = ConfLogger.new(STDOUT)
         # calling_file is the file name of the Ruby code that is our parent in the call stack.
         calling_file = caller.first.split(':').first
         log.debug("calling_file: #{calling_file}")

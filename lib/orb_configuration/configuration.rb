@@ -6,10 +6,15 @@ require 'logger'
 require 'yaml'
 
 module OrbConfiguration
-  class FileNotFoundException < Exception
-  end
+  FileNotFoundException = Class.new(Exception)
 
-  class NilConfigException < Exception
+  NilConfigException = Class.new(Exception)
+
+  class ConfLogger < Logger
+    def initialize(*args)
+      super
+      self.level = ENV['DEBUG'] ? Logger::DEBUG : Logger::INFO
+    end
   end
 
   # Provides access to data in 'config/config.yml'. Supports both [:property] and '.property' style access
@@ -23,7 +28,7 @@ module OrbConfiguration
     CODE_DIRECTORIES = %w(lib spec bin)
 
     def_delegators :@data_hash, :[]
-    LOG = Logger.new(STDOUT)
+    LOG = ConfLogger.new(STDOUT)
 
     class << self
       # @param [String] calling_file path of the file that invoked this code.
