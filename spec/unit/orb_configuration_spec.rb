@@ -28,6 +28,11 @@ module OrbConfiguration
         expect(config.test.foo).to eq('bar')
       end
 
+      it '#add! fails if YAML file is empty' do
+        config_path = File.join(File.dirname(__FILE__), '..', 'fixtures', 'empty.yml')
+        expect { config.add!(config_path) }.to raise_error("YAML unable to parse empty #{config_path}")
+      end
+
       it '#merge! sets config as expected' do
         expect(config.merge_test.foo).to eq('baz')
         config.merge!(merge_test: { foo: 'asdf' })

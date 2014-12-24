@@ -12,6 +12,12 @@ module OrbConfiguration
         config_path = Configuration.resolve_config_path(calling_file)
         if File.exist?(config_path)
           Configuration.instance.add!(config_path)
+          log.debug("Reading configuration from #{config_path}")
+          begin
+            Configuration.instance.add!(config_path)
+          rescue InvalidConfigException
+            log.warn("Read configuration from #{config_path}, but configuration not valid. Ignoring, check your config")
+          end
         else
           log.debug("Expected config directory #{config_path} not found. Not loading configuration")
         end

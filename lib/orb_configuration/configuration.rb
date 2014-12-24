@@ -7,8 +7,7 @@ require 'yaml'
 
 module OrbConfiguration
   FileNotFoundException = Class.new(Exception)
-
-  NilConfigException = Class.new(Exception)
+  InvalidConfigException = Class.new(Exception)
 
   class ConfLogger < Logger
     def initialize(*args)
@@ -75,14 +74,15 @@ module OrbConfiguration
       config_path ||= Configuration.resolve_config_path(calling_code_file_path)
       fail(FileNotFoundException, "#{config_path} not found") unless File.exist?(config_path)
       LOG.debug("Reading configuration from #{config_path}")
-      merge!(YAML.load_file(config_path))
+      config_hash = YAML.load_file(config_path)
+      fail(InvalidConfigException, "YAML unable to parse empty #{config_path}") unless config_hash # empty YAML returns false
+      merge!(config_hash)
     end
 
     # Set and merge config at runtime without a file.
     # @param {Hash} configuration data
     # @return nil
     def merge!(config = {})
-      fail(NilConfigException, 'Config cannot be nil.') if config.nil?
       @data_hash = @data_hash.nil? ? config : @data_hash.deep_merge(config)
       @data_model = RecursiveOpenStruct.new(@data_hash, recurse_over_arrays: true)
       nil
