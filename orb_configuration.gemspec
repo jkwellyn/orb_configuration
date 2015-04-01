@@ -25,7 +25,7 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency('rake', '~> 10.1')
   spec.add_development_dependency('annotation_manager', '~> 1.0')
   spec.add_development_dependency('yard', '~> 0.8.7')
-  spec.add_development_dependency('redcarpet', '~> 2.3.0')
+  spec.add_development_dependency('redcarpet', '~> 2.3')
   spec.add_development_dependency('rspec', '~> 3.1')
   spec.add_development_dependency('rspec-legacy_formatters', '~> 1.0')
   spec.add_development_dependency('rspec-extra-formatters', '~> 1.0')
@@ -36,5 +36,5 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency('opower-deployment', '0.1.2')
   spec.add_development_dependency('simplecov', '~> 0.7')
   spec.add_runtime_dependency('recursive-open-struct', '~> 0.5')
-  spec.add_runtime_dependency('activesupport', '>= 3.0.0')
+  spec.add_runtime_dependency('activesupport', '~> 4.0')
 end

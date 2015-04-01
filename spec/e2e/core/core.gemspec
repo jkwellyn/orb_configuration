@@ -22,10 +22,10 @@ Gem::Specification.new do |spec|
   spec.test_files    = spec.files.grep(/^(test|spec|features)\//)
   spec.require_paths = ['lib']
 
-  spec.add_development_dependency('rake', '~> 10.1.1')
+  spec.add_development_dependency('rake', '~> 10.1')
   spec.add_development_dependency('annotation_manager', '~> 0.0.2')
   spec.add_development_dependency('yard', '~> 0.8.7')
-  spec.add_development_dependency('redcarpet', '~> 2.3.0')
+  spec.add_development_dependency('redcarpet', '~> 2.3')
   spec.add_development_dependency('rspec', ' 2.14.1')
   spec.add_development_dependency('test_support', ' 0.0.2')
   spec.add_development_dependency('rspec-extra-formatters', ' 0.4')
