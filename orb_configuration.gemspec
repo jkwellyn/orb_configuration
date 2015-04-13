@@ -36,5 +36,8 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency('opower-deployment', '0.1.2')
   spec.add_development_dependency('simplecov', '~> 0.7')
   spec.add_runtime_dependency('recursive-open-struct', '~> 0.5')
-  spec.add_runtime_dependency('activesupport', '~> 4.0')
+  # We're only using deep_merge from AS. We think that method won't change, so we're leaving the version open-ended.
+  # We can't specify ~>4.0 because opower-hadoop is on ~>3.0.
+  # Talk to Thom Loftus or someone on Data Services before adding a version specifier.
+  spec.add_runtime_dependency('activesupport')
 end
