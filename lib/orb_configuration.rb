@@ -1,3 +1,4 @@
 require_relative 'orb_configuration/version'
 require_relative 'orb_configuration/configuration'
 require_relative 'orb_configuration/configurable'
+require_relative 'orb_configuration/ext/recursive_open_struct'

@@ -4,7 +4,7 @@ require File.expand_path('../lib/orb_configuration/version', __FILE__)
 Gem::Specification.new do |spec|
   spec.name          = 'orb_configuration'
   spec.version       = OrbConfiguration::VERSION
-  spec.summary       = 'A simple configuration library.'
+  spec.summary       = 'A simple configuration library'
   spec.description   = 'Provides programatic access to config/config.yml'
   spec.homepage      = 'https://github.va.opower.it/auto/orb_configuration'
 

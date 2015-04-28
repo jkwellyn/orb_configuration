@@ -1,0 +1,4 @@
+# .jenkins.yml
+---
+project_type: core
+view_name:    auto_core

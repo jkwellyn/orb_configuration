@@ -4,13 +4,13 @@
 # Tell bash that we want the whole script to fail if any part fails.
 set -e
 
-#Global Variables
+# Global Variables
 SOURCE_DIR=`pwd`
-#Build args
+# Build args
 ALPHA=$1
 BETA=$2
 
-#Begin
+# Begin
 echo "*************************************"
 echo "Running build script..."
 echo "PWD :"$SOURCE_DIR
@@ -50,5 +50,5 @@ main() {
 
 }
 
-#RUN
+# RUN
 main
