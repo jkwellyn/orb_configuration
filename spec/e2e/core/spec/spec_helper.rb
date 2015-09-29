@@ -1,6 +1,5 @@
 # TODO: make spec_helper_gem and spec_helper_test. Take coverage out of test.
 require 'simplecov'
-require 'test_support/filesystem_helper'
 
 SimpleCov.start do
   coverage_dir 'tmp/coverage/unit'
@@ -14,7 +13,3 @@ RSpec.configure do |config|
     c.syntax = :expect
   end
 end
-
-require 'orb_logger'
-LOG ||= OrbLogger::OrbLogger.new
-LOG.progname = 'Test Execution' # TODO: replace with whatever progname you want

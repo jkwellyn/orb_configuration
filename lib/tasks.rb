@@ -7,16 +7,10 @@ require 'rspec/core/rake_task'
 require 'rspec-extra-formatters'
 require 'fuubar'
 require 'rubocop/rake_task'
-require 'annotation_manager/rake_task'
-require 'yard'
 require 'logger'
 
 TMP_DIR = 'tmp'
 LOG = Logger.new(open('rake.log', File::WRONLY | File::APPEND | File::CREAT))
-
-YARD::Rake::YardocTask.new do |task|
-  task.options = ['--output-dir=tmp/yard']
-end
 
 desc 'Run RuboCop on lib and spec directories, Gemfile, gemspec, Rakefile; Override with a space delimited list'
 RuboCop::RakeTask.new(:rubocop, :pattern) do |task, args|
