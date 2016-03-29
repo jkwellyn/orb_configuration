@@ -1,3 +1,6 @@
+# THIS PROJECT HAS BEEN DEPRECATED
+Please use [clean_config](https://github.com/opower/clean_config) instead.
+
 #orb_configuration
 
 A simple configuration library for Ruby projects.
